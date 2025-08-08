@@ -5,12 +5,9 @@ class Solution(object):
         :type target: int
         :rtype: List[int]
         """
-        store = {}
+        my_map = {}
         for i in range(len(nums)):
-            store[nums[i]] = i
-        for i in range(len(nums)):
-            complement = target - nums[i]
-            if complement in store and store[complement] != i:
-                return [i, store[complement]]
-            
-        
+            j = target - nums[i]
+            if j in my_map:
+                return[i, my_map[j]]
+            my_map[nums[i]] = i
