@@ -7,10 +7,8 @@ class Solution(object):
         """
         if len(s) != len(t):
             return False
-        counts_s = {}
-        counts_t = {}
-        for chs,cht in zip(s,t):
-            counts_s[chs] = counts_s.get(chs, 0) + 1
-            counts_t[cht] = counts_t.get(cht, 0) + 1
-        return counts_s == counts_t
-        
+        sMap, tMap = {}, {}
+        for i in range(len(s)):
+            sMap[s[i]] = sMap.get(s[i], 0) + 1
+            tMap[t[i]] = tMap.get(t[i], 0) + 1
+        return sMap == tMap
