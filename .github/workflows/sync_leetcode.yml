@@ -1,0 +1,37 @@
+name: Sync LeetCode Solutions
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "7,22,37,52 * * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  sync-leetcode:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Compute Pacific Timestamp
+        id: tz
+        run: |
+          ts="$(TZ='America/Los_Angeles' date +%Y-%m-%dT%H:%M:%S%z)"
+          echo "current_time=$ts" >> "$GITHUB_OUTPUT"
+
+      - name: Sync LeetCode Solutions
+        uses: joshcai/leetcode-sync@v1.7
+        env:
+          GIT_AUTHOR_DATE: ${{ steps.tz.outputs.current_time }}
+          GIT_COMMITTER_DATE: ${{ steps.tz.outputs.current_time }}
+        with:
+          github-token: ${{ github.token }}
+          leetcode-csrf-token: ${{ secrets.LEETCODE_CSRF_TOKEN }}
+          leetcode-session: ${{ secrets.LEETCODE_SESSION }}
+          destination-folder: leetcode-solutions
+          verbose: true
+          commit-header: "[LeetCode Sync]"
+          filter-duplicate-secs: 86400
